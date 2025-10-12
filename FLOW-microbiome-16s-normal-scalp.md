@@ -1,8 +1,7 @@
-# Microbiome 16S/ITS Analysis Workflow
+# Microbiome 16S Analysis Workflow
 
 ## Databases
-- **SILVA 16S**
-- **UNITE ITS (General FASTA release)**: [https://doi.plutof.ut.ee/doi/10.15156/BIO/3301229](https://doi.plutof.ut.ee/doi/10.15156/BIO/3301229)
+- **Silva version 138.2, 16S** : [https://zenodo.org/records/14169026](https://zenodo.org/records/14169026)
 
 ## Git Repository
 - Repository: `jwchoi-derm-lab/microbiome-16s-normal-scalp`
@@ -27,11 +26,10 @@ flowchart TD
     C --> D[Adapter and primer removal using cutadapt and fastp]
     D --> E[Remove low quality files]
     E --> F[QC after adapter primer removal]
-    F --> G[Remove low quality files again]
-    G --> H[DADA2 processing]
+    F --> G[QC check before DADA2]
+    G --> H[Processing for DADA2]
     H --> I[ASV filtering and metadata merging]
     I --> J[Functional analysis using PICRUSt2]
-    J --> K[Outputs: QC metrics, ASVs, taxonomy, pathways]
 
 ```
 
