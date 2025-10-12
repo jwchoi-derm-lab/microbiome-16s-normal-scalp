@@ -23,15 +23,16 @@ git push origin main
 ```mermaid
 flowchart TD
     A[Download SRA files] --> B[Extraction]
-    B --> C[QC before adapter/primer removal]
-    C --> D[Adapter & primer removal (cutadapt / fastp)]
-    D --> E[Remove low QC files]
-    E --> F[QC after adapter/primer removal]
-    F --> G[Remove low QC files again]
+    B --> C[QC before adapter primer removal]
+    C --> D[Adapter and primer removal using cutadapt and fastp]
+    D --> E[Remove low quality files]
+    E --> F[QC after adapter primer removal]
+    F --> G[Remove low quality files again]
     G --> H[DADA2 processing]
-    H --> I[ASV filtering & metadata merging]
-    I --> J[Functional analysis (PICRUSt2)]
-    J --> K[Outputs: QC, ASVs, taxonomy, pathways]
+    H --> I[ASV filtering and metadata merging]
+    I --> J[Functional analysis using PICRUSt2]
+    J --> K[Outputs: QC metrics, ASVs, taxonomy, pathways]
+
 ```
 
 ---
