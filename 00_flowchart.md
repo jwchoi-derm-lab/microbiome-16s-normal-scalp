@@ -1,4 +1,4 @@
-# Microbiome 16S Analysis Workflow
+# Microbiome 16S Normal Scalp Analysis Workflow
 
 ## Databases
 - **Silva version 138.2, 16S** : [https://zenodo.org/records/14169026](https://zenodo.org/records/14169026)
