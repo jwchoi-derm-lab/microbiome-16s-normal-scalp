@@ -34,15 +34,12 @@ flowchart TD
 ```
 
 ---
+## Preparation : Making a metadata file from NCBI SRA
+- Each BioProject was queried using NCBI EDirect utilities to retrieve associated BioSample and SRA metadata in DocSum XML format. The XML records were parsed with custom Python scripts, and the extracted BioSample and SRA accessions were standardized using pandas. Metadata from all BioProjects were then integrated into a single dataset encompassing 17 independent studies, including data from the present work.
 
 ## Step 1: Downloading & Extracting SRA Files
-- Metadata: `/media/jwchoi/ssd2/projects/microbiome/16S_1/metadata/scalp_16s.csv`
-- Scripts:
-```bash
-sh scripts/01_16s_01_download_sra.sh
-bash scripts/02_16s_01_extraction_sra.sh
-python scripts/02_16s_01_single_end_name_change.py
-```
+- Metadata: `/media/jwchoi/ssd2/projects/microbiome/16S_1/metadata/scalp_16s_o.csv`
+
 
 ---
 
