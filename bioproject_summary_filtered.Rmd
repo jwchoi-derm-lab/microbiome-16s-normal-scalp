@@ -1,108 +1,114 @@
 ---
-  title: "BioProject Summary - Filtered Scalp 16S Samples"
+title: "BioProject Summary - Filtered Scalp 16S Samples"
 author: "Jee-Woong Choi"
 date: "`r Sys.Date()`"
 output: html_document
 ---
-  
-  ```{r setup, include=FALSE}
+
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 library(dplyr)
 library(readr)
 library(stringr)
-Load metadata
-글쓰기
-복사
+
+# ----------------------------------------------------------
+
+# Load metadata
+
+# ----------------------------------------------------------
+
 meta <- read_csv("/media/jwchoi/ssd2/projects/microbiome/16S_1/metadata/scalp_16s_o.csv")
 
-Apply filtering
-글쓰기
-복사
-filtered <- meta %>%
-  filter(
-    Seq == "16S",
-    Site == "Scalp",
-    Dx == "CTRL",
-    Time_points == "t=1 (Day 0)"
-  )
+# ----------------------------------------------------------
 
+# Apply filtering
+
+# Conditions: Seq == "16S" & Site == "Scalp" & Dx=="CTRL" & Time_points=="t=1 (Day 0)"
+
+# ----------------------------------------------------------
+
+filtered <- meta %>%
+filter(
+Seq == "16S",
+Site == "Scalp",
+Dx == "CTRL",
+Time_points == "t=1 (Day 0)"
+)
 
 cat("✅ Number of rows after filtering:", nrow(filtered), "\n")
 
-Count distinct BioProjects
-글쓰기
-복사
+# ----------------------------------------------------------
+
+# 1. Count of distinct BioProjects
+
+# ----------------------------------------------------------
+
 n_bioproject <- filtered %>%
-  distinct(BioProject) %>%
-  nrow()
+distinct(BioProject) %>%
+nrow()
 cat("1️⃣ Number of distinct BioProjects (filtered):", n_bioproject, "\n")
 
-Count distinct subjects per BioProject
-글쓰기
-복사
-Normalize Subject_id (remove trailing '_i' etc.)
+# ----------------------------------------------------------
+
+# 2. Count of distinct subjects per BioProject
+
+# Normalize Subject_id (remove trailing '_i' etc.)
+
+# ----------------------------------------------------------
 
 filtered <- filtered %>%
-  mutate(Subject_core = str_replace(Subject_id, "_.*$", ""))
-
+mutate(Subject_core = str_replace(Subject_id, "_.*$", ""))
 
 subject_summary <- filtered %>%
-  group_by(BioProject) %>%
-  summarise(
-    Subject_ids = list(unique(Subject_core)),
-    n_unique_subjects = length(unique(Subject_core)),
-    .groups = "drop"
-  )
+group_by(BioProject) %>%
+summarise(
+Subject_ids = list(unique(Subject_core)),
+n_unique_subjects = length(unique(Subject_core)),
+.groups = "drop"
+)
+
 cat("2️⃣ Subject count per BioProject (distinct normalized Subject_id):\n")
 subject_summary
 
-Total unique subjects across all BioProjects
-글쓰기
-복사
+# ----------------------------------------------------------
+
+# 3. Total unique subjects across all BioProjects
+
+# ----------------------------------------------------------
+
 total_unique_subjects <- length(unique(filtered$Subject_core))
 cat("\n✅ Total unique subjects across all filtered BioProjects:", total_unique_subjects, "\n")
 
-BioProject-wise metadata availability
-글쓰기
-복사
-bioproject_summary <- filtered %>%
-  group_by(BioProject) %>%
-  summarise(
-    Metadata_Sex = if_else(any(Sex != "NS" & !is.na(Sex)), "Yes", "No"),
-    Metadata_Age = if_else(any(Age != "NS" & !is.na(Age)), "Yes", "No"),
-    Metadata_Race = if_else(any(Ethnicity != "NS" & !is.na(Ethnicity)), "Yes", "No"),
-    Sample_numbers = n(),
-    Subject_numbers = n_distinct(Subject_core),
-    Layout = paste(unique(Layout), collapse = ", "),
-    Sample_type = paste(sort(unique(Sample)), collapse = ", "),
-    .groups = "drop"
-  ) %>%
-  ungroup()
+# ----------------------------------------------------------
 
+# 4. BioProject-wise metadata availability
+
+# ----------------------------------------------------------
+
+bioproject_summary <- filtered %>%
+group_by(BioProject) %>%
+summarise(
+Metadata_Sex  = if_else(any(Sex != "NS" & !is.na(Sex)), "Yes", "No"),
+Metadata_Age  = if_else(any(Age != "NS" & !is.na(Age)), "Yes", "No"),
+Metadata_Race = if_else(any(Ethnicity != "NS" & !is.na(Ethnicity)), "Yes", "No"),
+Sample_numbers  = n(),
+Subject_numbers = n_distinct(Subject_core),
+Layout      = paste(unique(Layout), collapse = ", "),
+Sample_type = paste(sort(unique(Sample)), collapse = ", "),
+.groups = "drop"
+) %>%
+ungroup()
 
 cat("3️⃣ BioProject-wise summary:\n")
 bioproject_summary
 
-Save summary table
-글쓰기
-복사
+# ----------------------------------------------------------
+
+# 5. Save summary table
+
+# ----------------------------------------------------------
+
 write_csv(
-  bioproject_summary,
-  "/media/jwchoi/ssd2/projects/microbiome/16S_1/metadata/table_1_bioproject_summary_filtered.csv"
+bioproject_summary,
+"/media/jwchoi/ssd2/projects/microbiome/16S_1/metadata/table_1_bioproject_summary_filtered.csv"
 )
-
-yaml
-코드 복사
-
----
-  
-  이대로 `.Rmd`로 저장하면, RStudio나 `rmarkdown::render()`를 통해 HTML로 바로 렌더링 가능합니다.  
-
-원하면 제가 **GitHub에 올려서 Pages로 결과 확인 가능하도록** 하는 예시도 만들어 드릴 수 있어요. 원하시나요?
-  
-  
-  
-  
-  
-  
-  
