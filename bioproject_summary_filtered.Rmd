@@ -15,22 +15,21 @@ library(dplyr)
 library(readr)
 library(stringr)
 
-
-# ----------------------------------------------------------
+# ==========================================================
 
 # Load metadata
 
-# ----------------------------------------------------------
+# ==========================================================
 
 meta <- read_csv("/media/jwchoi/ssd2/projects/microbiome/16S_1/metadata/scalp_16s_o.csv")
 
-# ----------------------------------------------------------
+# ==========================================================
 
 # Apply filtering
 
 # Conditions: Seq == "16S" & Site == "Scalp" & Dx=="CTRL" & Time_points=="t=1 (Day 0)"
 
-# ----------------------------------------------------------
+# ==========================================================
 
 filtered <- meta %>%
 filter(
@@ -42,24 +41,24 @@ Time_points == "t=1 (Day 0)"
 
 cat("✅ Number of rows after filtering:", nrow(filtered), "\n")
 
-# ----------------------------------------------------------
+# ==========================================================
 
 # 1. Count of distinct BioProjects
 
-# ----------------------------------------------------------
+# ==========================================================
 
 n_bioproject <- filtered %>%
 distinct(BioProject) %>%
 nrow()
 cat("1️⃣ Number of distinct BioProjects (filtered):", n_bioproject, "\n")
 
-# ----------------------------------------------------------
+# ==========================================================
 
 # 2. Count of distinct subjects per BioProject
 
 # Normalize Subject_id (remove trailing '_i' etc.)
 
-# ----------------------------------------------------------
+# ==========================================================
 
 filtered <- filtered %>%
 mutate(Subject_core = str_replace(Subject_id, "_.*$", ""))
@@ -75,20 +74,20 @@ n_unique_subjects = length(unique(Subject_core)),
 cat("2️⃣ Subject count per BioProject (distinct normalized Subject_id):\n")
 subject_summary
 
-# ----------------------------------------------------------
+# ==========================================================
 
 # 3. Total unique subjects across all BioProjects
 
-# ----------------------------------------------------------
+# ==========================================================
 
 total_unique_subjects <- length(unique(filtered$Subject_core))
 cat("\n✅ Total unique subjects across all filtered BioProjects:", total_unique_subjects, "\n")
 
-# ----------------------------------------------------------
+# ==========================================================
 
 # 4. BioProject-wise metadata availability
 
-# ----------------------------------------------------------
+# ==========================================================
 
 bioproject_summary <- filtered %>%
 group_by(BioProject) %>%
@@ -107,11 +106,11 @@ ungroup()
 cat("3️⃣ BioProject-wise summary:\n")
 bioproject_summary
 
-# ----------------------------------------------------------
+# ==========================================================
 
 # 5. Save summary table
 
-# ----------------------------------------------------------
+# ==========================================================
 
 write_csv(
 bioproject_summary,
