@@ -2,7 +2,11 @@
 title: "BioProject Summary - Filtered Scalp 16S Samples"
 author: "Jee-Woong Choi"
 date: "`r Sys.Date()`"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
 ---
 
 ```{r setup, include=FALSE}
@@ -10,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 library(dplyr)
 library(readr)
 library(stringr)
+
 
 # ----------------------------------------------------------
 
@@ -112,3 +117,4 @@ write_csv(
 bioproject_summary,
 "/media/jwchoi/ssd2/projects/microbiome/16S_1/metadata/table_1_bioproject_summary_filtered.csv"
 )
+
