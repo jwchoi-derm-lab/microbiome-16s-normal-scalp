@@ -612,13 +612,14 @@ Normal Scalp Metadata Summary</h1>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>meta <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;metadata/scalp_16s_o.csv&quot;</span>)</span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a></span>
 <span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>filtered <span class="ot">&lt;-</span> meta <span class="sc">%&gt;%</span></span>
-<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="fu">filter</span>(Seq <span class="sc">==</span> <span class="st">&quot;16S&quot;</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>Site <span class="sc">==</span> <span class="st">&quot;Scalp&quot;</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>Dx <span class="sc">==</span> <span class="st">&quot;CTRL&quot;</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>Time_points <span class="sc">==</span> <span class="st">&quot;t=1 (Day 0)&quot;</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>n_bioproject <span class="ot">&lt;-</span> filtered <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(BioProject) <span class="sc">%&gt;%</span> <span class="fu">nrow</span>()</span>
-<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of BioProjects :&quot;</span>, n_bioproject, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  <span class="fu">filter</span>(Seq <span class="sc">==</span> <span class="st">&quot;16S&quot;</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>         Site <span class="sc">==</span> <span class="st">&quot;Scalp&quot;</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>         Dx <span class="sc">==</span> <span class="st">&quot;CTRL&quot;</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>         Time_points <span class="sc">==</span> <span class="st">&quot;t=1 (Day 0)&quot;</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>         )</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>n_bioproject <span class="ot">&lt;-</span> filtered <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(BioProject) <span class="sc">%&gt;%</span> <span class="fu">nrow</span>()</span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of BioProjects :&quot;</span>, n_bioproject, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Number of BioProjects : 17</code></pre>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of samples :&quot;</span>, <span class="fu">nrow</span>(filtered), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Number of samples : 1239</code></pre>
@@ -636,43 +637,45 @@ Normal Scalp Metadata Summary</h1>
 <span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of subjects:&quot;</span>, <span class="fu">sum</span>(subject_summary<span class="sc">$</span>n_unique_subjects), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Number of subjects: 1114</code></pre>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># BioProject-wise Metadata Summary</span></span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>bioproject_summary <span class="ot">&lt;-</span> filtered <span class="sc">%&gt;%</span></span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="fu">group_by</span>(BioProject) <span class="sc">%&gt;%</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="fu">summarise</span>(</span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="at">Meta_sex  =</span> <span class="fu">if_else</span>(<span class="fu">any</span>(Sex <span class="sc">!=</span> <span class="st">&quot;NS&quot;</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Sex)), <span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>),</span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="at">Meta_age  =</span> <span class="fu">if_else</span>(<span class="fu">any</span>(Age <span class="sc">!=</span> <span class="st">&quot;NS&quot;</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Age)), <span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>),</span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="at">Meta_race =</span> <span class="fu">if_else</span>(<span class="fu">any</span>(Ethnicity <span class="sc">!=</span> <span class="st">&quot;NS&quot;</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Ethnicity)), <span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>),</span>
-<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="at">Sample_no  =</span> <span class="fu">n</span>(),</span>
-<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="at">Subject_no =</span> <span class="fu">n_distinct</span>(Subject_core),</span>
-<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="at">Layout      =</span> <span class="fu">paste</span>(<span class="fu">unique</span>(Layout), <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>),</span>
-<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="at">Type =</span> <span class="fu">paste</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(Sample)), <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>),</span>
-<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span></span>
-<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="fu">ungroup</span>()</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>bioproject_summary <span class="ot">&lt;-</span> filtered <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">group_by</span>(BioProject) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>    <span class="at">Meta_sex  =</span> <span class="fu">if_else</span>(<span class="fu">any</span>(Sex <span class="sc">!=</span> <span class="st">&quot;NS&quot;</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Sex)), <span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>    <span class="at">Meta_age  =</span> <span class="fu">if_else</span>(<span class="fu">any</span>(Age <span class="sc">!=</span> <span class="st">&quot;NS&quot;</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Age)), <span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>),</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>    <span class="at">Meta_race =</span> <span class="fu">if_else</span>(<span class="fu">any</span>(Ethnicity <span class="sc">!=</span> <span class="st">&quot;NS&quot;</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Ethnicity)), <span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>    <span class="at">Sample_no  =</span> <span class="fu">n</span>(),</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>    <span class="at">Subject_no =</span> <span class="fu">n_distinct</span>(Subject_core),</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>    <span class="at">Layout      =</span> <span class="fu">paste</span>(<span class="fu">unique</span>(Layout), <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>),</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>    <span class="at">Type =</span> <span class="fu">paste</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(Sample)), <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>),</span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>    <span class="at">File_no =</span> <span class="fu">n</span>() <span class="sc">*</span> <span class="fu">if_else</span>(<span class="fu">any</span>(Layout <span class="sc">==</span> <span class="st">&quot;PAIRED&quot;</span>), <span class="dv">2</span>, <span class="dv">1</span>),  <span class="co"># ← 여기 수정</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
 <span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a></span>
-<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="fu">options</span>(<span class="at">width =</span> <span class="dv">2000</span>)</span>
-<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="fu">print</span>(bioproject_summary)</span></code></pre></div>
-<pre><code>## # A tibble: 17 × 8
-##    BioProject   Meta_sex Meta_age Meta_race Sample_no Subject_no Layout Type        
-##    &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;         &lt;int&gt;      &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;       
-##  1 PRJDB5064    Yes      Yes      Yes              37         37 SINGLE Swab        
-##  2 PRJEB16723   Yes      Yes      No               11         11 SINGLE Swab        
-##  3 PRJEB25915   No       No       No               25         25 PAIRED Swab        
-##  4 PRJEB26870   Yes      No       No               61         61 PAIRED Hair        
-##  5 PRJEB62089   Yes      Yes      No               48         48 PAIRED Swab        
-##  6 PRJNA1115970 Yes      Yes      No                4          4 SINGLE Swab        
-##  7 PRJNA1189034 Yes      No       No              101         54 PAIRED Swab        
-##  8 PRJNA1223116 Yes      Yes      Yes             114         57 PAIRED Swab        
-##  9 PRJNA1268597 No       No       No               20         20 PAIRED Swab        
-## 10 PRJNA314604  Yes      Yes      Yes             110        110 SINGLE Swab        
-## 11 PRJNA415710  Yes      Yes      Yes              70         70 PAIRED Swab        
-## 12 PRJNA417700  No       No       No               42         21 PAIRED Hair        
-## 13 PRJNA510206  No       Yes      No               21         21 PAIRED Swab, Tissue
-## 14 PRJNA542898  No       No       No              494        494 PAIRED Swab        
-## 15 PRJNA788988  No       No       No               30         30 SINGLE Swab        
-## 16 PRJNA891901  Yes      Yes      Yes              46         46 SINGLE Swab        
-## 17 PRJNA953653  Yes      Yes      Yes               5          5 PAIRED Tissue</code></pre>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Number of sequence files :&quot;</span>, <span class="fu">sum</span>(bioproject_summary<span class="sc">$</span>File_no), <span class="st">&quot;</span><span class="sc">\n\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Number of sequence files : 2240</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">options</span>(<span class="at">width =</span> <span class="dv">2000</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">print</span>(bioproject_summary)</span></code></pre></div>
+<pre><code>## # A tibble: 17 × 9
+##    BioProject   Meta_sex Meta_age Meta_race Sample_no Subject_no Layout Type         File_no
+##    &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;         &lt;int&gt;      &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;          &lt;dbl&gt;
+##  1 PRJDB5064    Yes      Yes      Yes              37         37 SINGLE Swab              37
+##  2 PRJEB16723   Yes      Yes      No               11         11 SINGLE Swab              11
+##  3 PRJEB25915   No       No       No               25         25 PAIRED Swab              50
+##  4 PRJEB26870   Yes      No       No               61         61 PAIRED Hair             122
+##  5 PRJEB62089   Yes      Yes      No               48         48 PAIRED Swab              96
+##  6 PRJNA1115970 Yes      Yes      No                4          4 SINGLE Swab               4
+##  7 PRJNA1189034 Yes      No       No              101         54 PAIRED Swab             202
+##  8 PRJNA1223116 Yes      Yes      Yes             114         57 PAIRED Swab             228
+##  9 PRJNA1268597 No       No       No               20         20 PAIRED Swab              40
+## 10 PRJNA314604  Yes      Yes      Yes             110        110 SINGLE Swab             110
+## 11 PRJNA415710  Yes      Yes      Yes              70         70 PAIRED Swab             140
+## 12 PRJNA417700  No       No       No               42         21 PAIRED Hair              84
+## 13 PRJNA510206  No       Yes      No               21         21 PAIRED Swab, Tissue      42
+## 14 PRJNA542898  No       No       No              494        494 PAIRED Swab             988
+## 15 PRJNA788988  No       No       No               30         30 SINGLE Swab              30
+## 16 PRJNA891901  Yes      Yes      Yes              46         46 SINGLE Swab              46
+## 17 PRJNA953653  Yes      Yes      Yes               5          5 PAIRED Tissue            10</code></pre>
 
 </body>
 </html>
