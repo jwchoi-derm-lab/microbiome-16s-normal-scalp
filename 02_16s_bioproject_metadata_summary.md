@@ -12,7 +12,7 @@ library(knitr)
 
 # Load data
 meta <- read_csv("data/scalp_16s_o.csv")
-merged_16s_species_rel_filtered_subset <- readRDS("data/merged_16s_species_rel_filtered_subset.rds")
+final_meta <- readRDS("data/final_meta_normal_scalp.rds")
 
 filtered <- meta %>%
   filter(Seq == "16S",
@@ -99,7 +99,7 @@ print(bioproject_summary)
     ## 17 PRJNA953653  Yes      Yes      Yes               5          5 PAIRED Tissue            10
 
 ``` r
-sample_df <- data.frame(sample_data(merged_16s_species_rel_filtered_subset), 
+sample_df <- data.frame(sample_data(final_meta), 
                         check.names = FALSE, 
                         stringsAsFactors = FALSE)
 
