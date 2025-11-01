@@ -1,20 +1,24 @@
 Microbiome 16S Normal Scalp Metadata Summary
 ================
-2025-10-22
+2025-10-31
 
 ``` r
 library(dplyr)
 library(readr)
 library(stringr)
+library(moonBook)
+library(phyloseq)
+library(knitr)
 
-# Load Metadata
-meta <- read_csv("metadata/scalp_16s_o.csv")
+# Load data
+meta <- read_csv("data/scalp_16s_o.csv")
+merged_16s_species_rel_filtered_subset <- readRDS("data/merged_16s_species_rel_filtered_subset.rds")
 
 filtered <- meta %>%
   filter(Seq == "16S",
          Site == "Scalp",
          Dx == "CTRL",
-         Time_points == "t=1 (Day 0)"
+         Time_points == "t=1 (Day 0)" & !grepl("_u", Subject_id) 
          )
 
 n_bioproject <- filtered %>% distinct(BioProject) %>% nrow()
@@ -27,7 +31,7 @@ cat("Number of BioProjects :", n_bioproject, "\n")
 cat("Number of samples :", nrow(filtered), "\n")
 ```
 
-    ## Number of samples : 1239
+    ## Number of samples : 1190
 
 ``` r
 filtered <- filtered %>%
@@ -44,7 +48,7 @@ subject_summary <- filtered %>%
 cat("Number of subjects:", sum(subject_summary$n_unique_subjects), "\n")
 ```
 
-    ## Number of subjects: 1114
+    ## Number of subjects: 1112
 
 ``` r
 # BioProject-wise Metadata Summary
@@ -66,7 +70,7 @@ bioproject_summary <- filtered %>%
 cat("Number of sequence files :", sum(bioproject_summary$File_no), "\n\n")
 ```
 
-    ## Number of sequence files : 2240
+    ## Number of sequence files : 2142
 
 ``` r
 options(width = 2000)
@@ -82,7 +86,7 @@ print(bioproject_summary)
     ##  4 PRJEB26870   Yes      No       No               61         61 PAIRED Hair             122
     ##  5 PRJEB62089   Yes      Yes      No               48         48 PAIRED Swab              96
     ##  6 PRJNA1115970 Yes      Yes      No                4          4 SINGLE Swab               4
-    ##  7 PRJNA1189034 Yes      No       No              101         54 PAIRED Swab             202
+    ##  7 PRJNA1189034 Yes      No       No               52         52 PAIRED Swab             104
     ##  8 PRJNA1223116 Yes      Yes      Yes             114         57 PAIRED Swab             228
     ##  9 PRJNA1268597 No       No       No               20         20 PAIRED Swab              40
     ## 10 PRJNA314604  Yes      Yes      Yes             110        110 SINGLE Swab             110
@@ -93,3 +97,35 @@ print(bioproject_summary)
     ## 15 PRJNA788988  No       No       No               30         30 SINGLE Swab              30
     ## 16 PRJNA891901  Yes      Yes      Yes              46         46 SINGLE Swab              46
     ## 17 PRJNA953653  Yes      Yes      Yes               5          5 PAIRED Tissue            10
+
+``` r
+sample_df <- data.frame(sample_data(merged_16s_species_rel_filtered_subset), 
+                        check.names = FALSE, 
+                        stringsAsFactors = FALSE)
+
+tbl <- mytable(~ Sex + Ethnicity + Age_group, data = sample_df)
+kable(tbl, caption = "Demographic summary of 975 samples used in the final analysis \n\n * NS : Not specified")  
+```
+
+Table: Demographic summary of 975 samples used in the final analysis
+
+- NS : Not specified
+
+| name         | stats       | N   | missing | rate    | class       |
+|:-------------|:------------|:----|:--------|:--------|:------------|
+| Sex          |             | 975 | 0       | ( 0.0%) | categorical |
+| \- F         | 225 (23.1%) |     |         |         |             |
+| \- M         | 230 (23.6%) |     |         |         |             |
+| \- NS        | 520 (53.3%) |     |         |         |             |
+| Ethnicity    |             | 975 | 0       | ( 0.0%) | categorical |
+| \- African   | 29 (3.0%)   |     |         |         |             |
+| \- Asian     | 236 (24.2%) |     |         |         |             |
+| \- Caucasian | 16 (1.6%)   |     |         |         |             |
+| \- Hispanic  | 20 (2.1%)   |     |         |         |             |
+| \- NS        | 674 (69.1%) |     |         |         |             |
+| Age_group    |             | 975 | 0       | ( 0.0%) | categorical |
+| \- 16-30     | 142 (14.6%) |     |         |         |             |
+| \- 31-45     | 115 (11.8%) |     |         |         |             |
+| \- 46-60     | 37 (3.8%)   |     |         |         |             |
+| \- 61-       | 22 (2.3%)   |     |         |         |             |
+| \- NS        | 659 (67.6%) |     |         |         |             |
