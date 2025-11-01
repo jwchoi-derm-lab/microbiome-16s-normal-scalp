@@ -3,7 +3,7 @@
 ## Overview
 Automated analysis pipeline for scalp 16S rRNA amplicon data from NCBI SRA through functional prediction.
 
-**Dataset**: 1,239 scalp samples from 1,114 subjects (17 BioProjects, 6,455 runs)
+**Dataset**: 1,190 scalp samples from 1,112 subjects from 17 BioProjects, 6,455 runs
 
 ---
 
@@ -27,11 +27,10 @@ Automated analysis pipeline for scalp 16S rRNA amplicon data from NCBI SRA throu
 - **Truncation**: PE (≥20 bp overlap), SE (≥75% amplicon)
 - **Chimera removal**: consensus method
 - **Taxonomy**: SILVA v138.2 (genus/species, naïve Bayesian classifier)
-- **Excluded**: 6 samples (insufficient coverage)
 
 ### 4. Analysis
-- **Filtering**: ≥50 reads, ≥1% prevalence, >0.1% relative abundance
-- **Alpha diversity**: Rarefied to 2,000 reads, Kruskal-Wallis test
+- **Filtering**: ≥50 reads, ≥1% prevalence, >0.1% relative abundance within a BioProject
+- **Alpha diversity**: Rarefied to 500 reads, Kruskal-Wallis test
 - **Beta diversity**: Bray-Curtis dissimilarity, PCoA, PERMANOVA
 - **Normalization**: BioProject-specific, integrated into phyloseq
 - **Transformation**: Centered log-ratio (CLR)
